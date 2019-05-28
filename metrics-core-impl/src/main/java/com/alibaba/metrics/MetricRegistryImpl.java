@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alibaba.metrics;
 
 import com.alibaba.metrics.common.config.MetricsCollectPeriodConfig;
@@ -431,6 +447,11 @@ public class MetricRegistryImpl extends MetricRegistry {
     }
 
     @Override
+    public SortedMap<MetricName, ClusterHistogram> getClusterHistograms() {
+        return getMetrics(ClusterHistogram.class, MetricFilter.ALL);
+    }
+    
+    @Override
     public SortedMap<MetricName, Metric> getMetrics(MetricFilter filter) {
         final TreeMap<MetricName, Metric> filteredMetrics = new TreeMap<MetricName, Metric>();
         filteredMetrics.putAll(getCounters(filter));
@@ -440,6 +461,7 @@ public class MetricRegistryImpl extends MetricRegistry {
         filteredMetrics.putAll(getTimers(filter));
         filteredMetrics.putAll(getCompasses(filter));
         filteredMetrics.putAll(getFastCompasses(filter));
+        filteredMetrics.putAll(getClusterHistograms(filter));
         return Collections.unmodifiableSortedMap(filteredMetrics);
     }
 
@@ -458,6 +480,7 @@ public class MetricRegistryImpl extends MetricRegistry {
         metrics.putAll(getTimers(MetricFilter.ALL));
         metrics.putAll(getCompasses(MetricFilter.ALL));
         metrics.putAll(getFastCompasses(MetricFilter.ALL));
+        metrics.putAll(getClusterHistograms(MetricFilter.ALL));
         for (Map.Entry<MetricName, Metric> entry: metrics.entrySet()) {
             if (latest < entry.getValue().lastUpdateTime()) {
                 latest = entry.getValue().lastUpdateTime();

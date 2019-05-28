@@ -1,5 +1,22 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alibaba.metrics.reporter;
 
+import com.alibaba.metrics.ClusterHistogram;
 import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.FastCompass;
@@ -251,7 +268,8 @@ public abstract class MetricManagerReporter implements Closeable {
                     (Map<MetricName, Meter>) categoryMetrics.get(Meter.class),
                     (Map<MetricName, Timer>) categoryMetrics.get(Timer.class),
                     (Map<MetricName, Compass>) categoryMetrics.get(Compass.class),
-                    (Map<MetricName, FastCompass>) categoryMetrics.get(FastCompass.class));
+                    (Map<MetricName, FastCompass>) categoryMetrics.get(FastCompass.class),
+                    (Map<MetricName, ClusterHistogram>) categoryMetrics.get(ClusterHistogram.class));
         }
     }
 
@@ -271,7 +289,8 @@ public abstract class MetricManagerReporter implements Closeable {
                                 Map<MetricName, Meter> meters,
                                 Map<MetricName, Timer> timers,
                                 Map<MetricName, Compass> compasses,
-                                Map<MetricName, FastCompass> fastCompasses);
+                                Map<MetricName, FastCompass> fastCompasses,
+                                Map<MetricName, ClusterHistogram> clusterHistogrames);
 
     protected String getRateUnit() {
         return rateUnit;

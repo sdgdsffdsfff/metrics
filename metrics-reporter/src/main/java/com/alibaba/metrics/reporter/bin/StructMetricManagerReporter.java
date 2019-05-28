@@ -1,6 +1,23 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alibaba.metrics.reporter.bin;
 
 import com.alibaba.metrics.Clock;
+import com.alibaba.metrics.ClusterHistogram;
 import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.FastCompass;
@@ -99,7 +116,7 @@ public class StructMetricManagerReporter extends MetricManagerReporter {
     @Override
     public void report(Map<MetricName, Gauge> gauges, Map<MetricName, Counter> counters,
             Map<MetricName, Histogram> histograms, Map<MetricName, Meter> meters, Map<MetricName, Timer> timers,
-            Map<MetricName, Compass> compasses, Map<MetricName, FastCompass> fastCompasses) {
+            Map<MetricName, Compass> compasses, Map<MetricName, FastCompass> fastCompasses, Map<MetricName, ClusterHistogram> clusterHistogrames) {
 
         long timestamp = clock.getTime();
 
@@ -144,6 +161,10 @@ public class StructMetricManagerReporter extends MetricManagerReporter {
             collector.collect(entry.getKey(), entry.getValue(), timestamp);
         }
 
+        for (Entry<MetricName, ClusterHistogram> entry : clusterHistogrames.entrySet()) {
+            collector.collect(entry.getKey(), entry.getValue(), timestamp);
+        }
+        
         Map<MetricLevel, Map<Long, List<MetricObject>>> metrics = ((ClassifiedMetricsCollector) collector).getMetrics();
 
         if (metrics.size() <= 0) {

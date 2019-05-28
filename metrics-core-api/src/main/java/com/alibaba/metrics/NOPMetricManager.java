@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.alibaba.metrics;
 
 import java.io.IOException;
@@ -868,6 +884,12 @@ public class NOPMetricManager implements IMetricManager {
         public long lastUpdateTime() {
             return 0;
         }
+
+        @Override
+        public SortedMap<MetricName, ClusterHistogram> getClusterHistograms() {
+            return emptyMap;
+        }
+
     };
 
     @Override
@@ -892,6 +914,7 @@ public class NOPMetricManager implements IMetricManager {
         Map<MetricName, Timer> timers = Collections.emptyMap();
         Map<MetricName, Compass> compasses = Collections.emptyMap();
         Map<MetricName, FastCompass> fastCompasses = Collections.emptyMap();
+        Map<MetricName, ClusterHistogram> clusterHistogrames = Collections.emptyMap();
 
         result.put(Gauge.class, gauges);
         result.put(Counter.class, counters);
@@ -900,6 +923,7 @@ public class NOPMetricManager implements IMetricManager {
         result.put(Timer.class, timers);
         result.put(Compass.class, compasses);
         result.put(FastCompass.class, fastCompasses);
+        result.put(ClusterHistogram.class, clusterHistogrames);
 
         return result;
     }
@@ -911,6 +935,11 @@ public class NOPMetricManager implements IMetricManager {
 
     @Override
     public Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getAllCategoryMetrics(MetricFilter filter) {
+        return emptyMap;
+    }
+
+    @Override
+    public SortedMap<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricFilter filter) {
         return emptyMap;
     }
 
